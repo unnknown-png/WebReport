@@ -1,0 +1,46 @@
+name: DevOps Demo Deploy
+
+# Спрацьовує на пуш у гілку main
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-test-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Checkout репозиторію
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2️⃣ Перевірка наявності HTML файлів
+      - name: Validate HTML files
+        run: |
+          echo "Перевірка наявності основних файлів сайту..."
+          for file in index.html cicd.html actions.html; do
+            if [ ! -f "$file" ]; then
+              echo "❌ Файл $file відсутній!"
+              exit 1
+            else
+              echo "✅ $file знайдено"
+            fi
+
+      # 3️⃣ Базовий тест: перевірка title на index.html
+      - name: Test index.html title
+        run: |
+          echo "Перевірка тега <title> у index.html..."
+          if grep -q "<title>" index.html; then
+            echo "✅ Title знайдено"
+          else
+            echo "❌ Title відсутній!"
+            exit 1
+          fi
+
+      # 4️⃣ Деплой на GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./

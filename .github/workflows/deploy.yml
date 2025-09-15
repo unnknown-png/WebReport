@@ -26,6 +26,7 @@ jobs:
             else
               echo "✅ $file знайдено"
             fi
+          done
 
       # 3️⃣ Базовий тест: перевірка title на index.html
       - name: Test index.html title

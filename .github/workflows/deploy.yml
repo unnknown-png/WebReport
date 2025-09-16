@@ -10,33 +10,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout репозиторію
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2️⃣ Перевірка наявності HTML файлів у content/
       - name: Validate HTML files
         run: |
           echo "Перевірка наявності основних файлів сайту..."
           for file in index.html cicd.html actions.html; do
-            if [ ! -f "$file" ]; then
-              echo "❌ Файл $file відсутній!"
+            if [ ! -f "content/$file" ]; then
+              echo "❌ Файл $file відсутній у папці content!"
               exit 1
             else
-              echo "✅ $file знайдено"
+              echo "✅ $file знайдено у content/"
             fi
           done
 
+      # 3️⃣ Базовий тест: перевірка title на index.html
       - name: Test index.html title
         run: |
           echo "Перевірка тега <title> у index.html..."
-          if grep -q "<title>" index.html; then
+          if grep -q "<title>" content/index.html; then
             echo "✅ Title знайдено"
           else
             echo "❌ Title відсутній!"
             exit 1
           fi
 
+      # 4️⃣ Деплой на GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.PAT_TOKEN }}
-          publish_dir: ./
+          publish_dir: ./content

@@ -1,6 +1,5 @@
 name: DevOps Demo Deploy
 
-# Спрацьовує на пуш у гілку main
 on:
   push:
     branches:
@@ -11,11 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout репозиторію
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Перевірка наявності HTML файлів
       - name: Validate HTML files
         run: |
           echo "Перевірка наявності основних файлів сайту..."
@@ -28,7 +25,6 @@ jobs:
             fi
           done
 
-      # 3️⃣ Базовий тест: перевірка title на index.html
       - name: Test index.html title
         run: |
           echo "Перевірка тега <title> у index.html..."
@@ -39,7 +35,6 @@ jobs:
             exit 1
           fi
 
-      # 4️⃣ Деплой на GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:

@@ -2,12 +2,14 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GitHub Actions</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
         <h1>DevOps Demo Site</h1>
+        <button id="darkModeToggle" class="dark-mode-toggle">🌙</button>
     </header>
     
     <nav>
@@ -17,8 +19,68 @@
     </nav>
 
     <main>
-        <h2>GitHub Actions</h2>
-        <p>Ця сторінка демонструє роботу GitHub Actions для автоматизації CI/CD. Вона буде доступна після додавання коміту.</p>
+        <section class="hero">
+            <h2>GitHub Actions</h2>
+            <img src="images/github-actions-logo.png" alt="Ілюстрація GitHub Actions" class="hero-image">
+            <p class="hero-text">GitHub Actions – це вбудована платформа для автоматизації CI/CD прямо в GitHub, дозволяючи створювати workflows без додаткових інструментів.</p>
+        </section>
+
+        <div class="section">
+            <h3>Що таке GitHub Actions?</h3>
+            <p>GitHub Actions дозволяє автоматизувати завдання, такі як тестування, збірка та деплоїмент, на основі подій у репозиторії (push, pull request тощо). Це безкоштовно для публічних репозиторіїв і має щомісячні квоти для приватних.</p>
+        </div>
+
+        <div class="section">
+            <h3>Як це працює?</h3>
+            <p>Workflows описуються в YML-файлах у директорії .github/workflows. Кожен workflow складається з jobs, steps та actions (перевикористовуваних скриптів). Наприклад, на push до main запускається тестування.</p>
+        </div>
+
+        <div class="section">
+            <h3>Приклад простого workflow</h3>
+            <pre><code class="yml-example">
+name: CI Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run tests
+      run: npm test
+    - name: Build
+      run: npm run build
+            </code></pre>
+            <p>Цей YML-файл тестує та будує Node.js проект на кожному push.</p>
+        </div>
+
+        <div class="section">
+            <h3>Переваги GitHub Actions</h3>
+            <ul>
+                <li>Інтеграція з GitHub: Ніяких зовнішніх сервісів.</li>
+                <li>Гнучкість: Тисячі готових actions у marketplace.</li>
+                <li>Масштабованість: Підтримка self-hosted runners.</li>
+                <li>Безпека: Secrets для ключів API.</li>
+                <li>Безкоштовний для open-source: 2000 хвилин/місяць.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3>Розширені приклади</h3>
+            <ul>
+                <li>Деплоїмент на Vercel: Автоматичний реліз на pull request merge.</li>
+                <li>Сек'юріті скан: Інтеграція з Dependabot для оновлень залежностей.</li>
+                <li>Матрикс тестування: Тест на кількох версіях Node.js паралельно.</li>
+            </ul>
+            <p>Детальніше: <a href="https://docs.github.com/en/actions" target="_blank">Документація GitHub Actions</a></p>
+        </div>
     </main>
+
+    <footer>
+        <p>&copy; 2025 DevOps Demo Site. Всі права захищено.</p>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>

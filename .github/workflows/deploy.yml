@@ -30,16 +30,16 @@ jobs:
           echo "🔍 Перевірка наявності основних файлів сайту..."
           for file in index.html cicd.html actions.html; do
             if [ ! -f "content/$file" ]; then
-              echo "❌ Файл $file відсутній у content/"
+              echo " Файл $file відсутній у content/"
               exit 1
             else
-              echo "✅ $file знайдено"
+              echo " $file знайдено"
             fi
           done
           if [ ! -d "content/images" ]; then
-            echo "⚠️ Папка images відсутня (перевір фото)"
+            echo " Папка images відсутня (перевір фото)"
           else
-            echo "✅ Папка images знайдена"
+            echo " Папка images знайдена"
           fi
 
       - name: Lint HTML (htmlhint)
@@ -61,9 +61,9 @@ jobs:
         run: |
           echo "🔍 Перевірка <title> в content/index.html..."
           if grep -q "<title>" content/index.html; then
-            echo "✅ title знайдено"
+            echo " title знайдено"
           else
-            echo "❌ <title> відсутній в index.html"
+            echo " <title> відсутній в index.html"
             exit 1
           fi
 

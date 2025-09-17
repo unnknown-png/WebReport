@@ -164,7 +164,6 @@ footer {
     margin-top: 40px;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
     nav a {
         display: block;

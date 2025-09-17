@@ -5,42 +5,84 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   build-test-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout репозиторію
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Перевірка наявності HTML файлів у content/
-      - name: Validate HTML files
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install linters (htmlhint, eslint, stylelint)
         run: |
-          echo "Перевірка наявності основних файлів сайту..."
+          npm install -g htmlhint eslint stylelint || true
+
+      - name: Validate project structure
+        run: |
+          echo "🔍 Перевірка наявності основних файлів сайту..."
           for file in index.html cicd.html actions.html; do
             if [ ! -f "content/$file" ]; then
-              echo "❌ Файл $file відсутній у папці content!"
+              echo "❌ Файл $file відсутній у content/"
               exit 1
             else
-              echo "✅ $file знайдено у content/"
+              echo "✅ $file знайдено"
             fi
           done
-
-      # 3️⃣ Базовий тест: перевірка title на index.html
-      - name: Test index.html title
-        run: |
-          echo "Перевірка тега <title> у index.html..."
-          if grep -q "<title>" content/index.html; then
-            echo "✅ Title знайдено"
+          if [ ! -d "content/images" ]; then
+            echo "⚠️ Папка images відсутня (перевір фото)"
           else
-            echo "❌ Title відсутній!"
+            echo "✅ Папка images знайдена"
+          fi
+
+      - name: Lint HTML (htmlhint)
+        run: |
+          echo "🔍 Lint HTML..."
+          htmlhint "content/**/*.html"
+
+      - name: Lint CSS (stylelint, не блокує деплой)
+        run: |
+          echo "🔍 Lint CSS..."
+          stylelint "content/**/*.css" || echo "⚠️ stylelint завершився з помилками (не фатально)"
+
+      - name: Lint JS (eslint, не блокує деплой)
+        run: |
+          echo "🔍 Lint JS..."
+          eslint --ext .js content/ || echo "⚠️ eslint завершився з помилками (не фатально)"
+
+      - name: Basic smoke-test index.html
+        run: |
+          echo "🔍 Перевірка <title> в content/index.html..."
+          if grep -q "<title>" content/index.html; then
+            echo "✅ title знайдено"
+          else
+            echo "❌ <title> відсутній в index.html"
             exit 1
           fi
 
-      # 4️⃣ Деплой на GitHub Pages
-      - name: Deploy to GitHub Pages
+      - name: Build static site (copy to dist/)
+        run: |
+          echo "📦 Підготовка dist/ для деплою..."
+          rm -rf dist
+          mkdir -p dist
+          cp -r content/* dist/
+
+      - name: Upload site artifact (optional)
+        uses: actions/upload-artifact@v4
+        with:
+          name: devops-demo-site
+          path: dist
+
+      - name: Deploy to GitHub Pages (gh-pages branch)
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.PAT_TOKEN }}
-          publish_dir: ./content
+          publish_dir: ./dist
+          publish_branch: gh-pages

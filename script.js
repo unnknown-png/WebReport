@@ -1,10 +1,7 @@
-// script.js - Простий JS для темної теми та smooth scroll
-
 document.addEventListener('DOMContentLoaded', function() {
     const toggle = document.getElementById('darkModeToggle');
     const body = document.body;
 
-    // Перевірка збереженого стану теми
     if (localStorage.getItem('darkMode') === 'enabled') {
         body.classList.add('dark-mode');
         toggle.textContent = '☀️';
@@ -21,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Smooth scroll для посилань у nav
     const navLinks = document.querySelectorAll('nav a[href^="#"]');
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
@@ -34,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Додати active class для поточної сторінки
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     const links = document.querySelectorAll('nav a');
     links.forEach(link => {

@@ -25,6 +25,7 @@ jobs:
         run: |
           npm install -g htmlhint eslint stylelint || true
 
+
       - name: Validate project structure
         run: |
           echo "🔍 Перевірка наявності основних файлів сайту..."
@@ -56,7 +57,7 @@ jobs:
         run: |
           echo "🔍 Lint JS..."
           eslint --ext .js content/ || echo "⚠️ eslint завершився з помилками (не фатально)"
-
+          
       - name: Basic smoke-test index.html
         run: |
           echo "🔍 Перевірка <title> в content/index.html..."
@@ -67,18 +68,13 @@ jobs:
             exit 1
           fi
 
+
       - name: Build static site (copy to dist/)
         run: |
           echo "📦 Підготовка dist/ для деплою..."
           rm -rf dist
           mkdir -p dist
           cp -r content/* dist/
-
-      - name: Upload site artifact (optional)
-        uses: actions/upload-artifact@v4
-        with:
-          name: devops-demo-site
-          path: dist
 
       - name: Deploy to GitHub Pages (gh-pages branch)
         uses: peaceiris/actions-gh-pages@v3

@@ -5,9 +5,6 @@ on:
     branches:
       - main
 
-permissions:
-  contents: write
-
 jobs:
   build-test-and-deploy:
     runs-on: ubuntu-latest
@@ -28,7 +25,7 @@ jobs:
 
       - name: Validate project structure
         run: |
-          echo "🔍 Перевірка наявності основних файлів сайту..."
+          echo "Перевірка наявності основних файлів сайту..."
           for file in index.html cicd.html actions.html; do
             if [ ! -f "content/$file" ]; then
               echo " Файл $file відсутній у content/"
@@ -45,22 +42,22 @@ jobs:
 
       - name: Lint HTML (htmlhint)
         run: |
-          echo "🔍 Lint HTML..."
+          echo "Lint HTML..."
           htmlhint "content/**/*.html"
 
       - name: Lint CSS (stylelint, не блокує деплой)
         run: |
-          echo "🔍 Lint CSS..."
+          echo "Lint CSS..."
           stylelint "content/**/*.css" || echo "⚠️ stylelint завершився з помилками (не фатально)"
 
       - name: Lint JS (eslint, не блокує деплой)
         run: |
-          echo "🔍 Lint JS..."
+          echo "Lint JS..."
           eslint --ext .js content/ || echo "⚠️ eslint завершився з помилками (не фатально)"
           
       - name: Basic smoke-test index.html
         run: |
-          echo "🔍 Перевірка <title> в content/index.html..."
+          echo "Перевірка <title> в content/index.html..."
           if grep -q "<title>" content/index.html; then
             echo " title знайдено"
           else
@@ -71,7 +68,7 @@ jobs:
 
       - name: Build static site (copy to dist/)
         run: |
-          echo "📦 Підготовка dist/ для деплою..."
+          echo "Підготовка dist/ для деплою..."
           rm -rf dist
           mkdir -p dist
           cp -r content/* dist/
